@@ -23,8 +23,11 @@ fun findExponents(eq: String): List<Int> {
     }
 }
 
+//TODO: regex power XD ale kurwa to jest najciezsza czesc zadania, jak cos to nie dziala bo trzeba tego stringa teraz na tablice intow fajnie zrobic
 fun findCoefficients(eq: String): List<Int> {
-    val words: List<String> = eq.split('+', '-').map { it.trim() }
+    val reg = Regex("(?<=[+-])|(?=[+-])")
+    val words: List<String> = eq.split(reg).map { it.trim() }
+    println(words)
     return words.map {
         when {
             'x' == it.first() -> 1
@@ -36,18 +39,20 @@ fun findCoefficients(eq: String): List<Int> {
 //TODO: no to bedzie rozbudowane wiec zaczalem dzielic to na jakies mini funkcje nwm czy jest czytelne
 //TODO: a no i nazewnictwo zmiennych do ogarniecia bo raczysko
 fun calculateRemainder(exponents1: List<Int>, coefficients1: List<Int>, exponents2: List<Int>, coefficients2: List<Int>): String {
-    var remainder = ""
+    //var remainder = ""
     val stoppingIndex = getStoppingIndex(exponents1, exponents2)
     var index = 0
-    var copyCoeff2 = coefficients2.toMutableList()
-    var copyCoeff1 = coefficients1.toMutableList()
-    while (!emptyTillStoppingIndex(copyCoeff1, stoppingIndex)) {
-        val ratio = copyCoeff1[index].toDouble() / coefficients2[0]
+    var copyCoeff2 = coefficients2.map {it.toDouble()}.toMutableList()
+    var copyCoeff1 = coefficients1.map {it.toDouble()}.toMutableList()
+    while (emptyTillStoppingIndex(copyCoeff1, stoppingIndex)) {
+        println(copyCoeff1.indexOfFirst { it != 0.0 })
+        val ratio = copyCoeff1[index].toDouble() / copyCoeff2[0]
         println(copyCoeff1)
         copyCoeff2 = copyCoeff2.map { it * ratio }.toMutableList()
         println(copyCoeff2)
         subtract(copyCoeff1, copyCoeff2, index)
         index += 1
+        copyCoeff2 = coefficients2.map {it.toDouble()}.toMutableList()
     }
     return copyCoeff1.toString()
 }
@@ -57,16 +62,16 @@ fun getStoppingIndex(exponents1: List<Int>, exponents2: List<Int>): Int {
     return exponents1.indexOfFirst { it == lastToDivide }
 }
 
-fun emptyTillStoppingIndex(exponents1: List<Int>, index: Int): Boolean {
-    //println(exponents1.first { it != 0} <= index)
-    return exponents1.first { it != 0 } <= index
+fun emptyTillStoppingIndex(coefficients1: List<Double>, index: Int): Boolean {
+    //println(coefficients1.first { it != 0} <= index)
+    return coefficients1.indexOfFirst { it != 0.0 } <= index
 }
 
-fun subtract(coefficients1: MutableList<Int>, coefficients2: MutableList<Int>, index: Int) {
-    var ind = 0
+fun subtract(coefficients1: MutableList<Double>, coefficients2: MutableList<Double>, index: Int) {
+    var ind = 0 + index
     for (co in coefficients2) {
         coefficients1[ind] -= co
         ind += 1
     }
-    coefficients1.drop(0)
+    //coefficients1.removeAt(0)
 }
