@@ -2,8 +2,8 @@
 TODO: troche syfiascie wyglada w tym mainie wczytywanie po 2 razy dla obu wielomianow
 */
 fun main() {
-    val sampleEquation: String = "3x^3 + x^2 -x -1"
-    val samplePolynomial: String = "x + 3"
+    val sampleEquation = "3x^3 + x^2 -x -1"
+    val samplePolynomial = "x + 3"
     val exponentsEq = findExponents(sampleEquation)
     val coefficientsEq = findCoefficients(sampleEquation)
     val exponentsPoly = findExponents(samplePolynomial)
@@ -34,7 +34,7 @@ fun findCoefficients(eq: String): List<Int> {
         index += 1
     }
     words.removeAll(arrayListOf("+","-"))
-    var list: MutableList<Int> = mutableListOf()
+    val list: MutableList<Int> = mutableListOf()
     for (word in words){
         if ("x" in word) {
             val indexOfX = word.indexOf('x')
@@ -64,14 +64,13 @@ fun findCoefficients(eq: String): List<Int> {
 //TODO: no to bedzie rozbudowane wiec zaczalem dzielic to na jakies mini funkcje nwm czy jest czytelne
 //TODO: a no i nazewnictwo zmiennych do ogarniecia bo raczysko
 fun calculateRemainder(exponents1: List<Int>, coefficients1: List<Int>, exponents2: List<Int>, coefficients2: List<Int>): String {
-    //var remainder = ""
     val stoppingIndex = getStoppingIndex(exponents1, exponents2)
     var index = 0
     var copyCoeff2 = coefficients2.map {it.toDouble()}.toMutableList()
-    var copyCoeff1 = coefficients1.map {it.toDouble()}.toMutableList()
+    val copyCoeff1 = coefficients1.map {it.toDouble()}.toMutableList()
     while (emptyTillStoppingIndex(copyCoeff1, stoppingIndex)) {
         println(copyCoeff1.indexOfFirst { it != 0.0 })
-        val ratio = copyCoeff1[index].toDouble() / copyCoeff2[0]
+        val ratio = copyCoeff1[index] / copyCoeff2[0]
         println(copyCoeff1)
         copyCoeff2 = copyCoeff2.map { it * ratio }.toMutableList()
         println(copyCoeff2)
@@ -88,7 +87,6 @@ fun getStoppingIndex(exponents1: List<Int>, exponents2: List<Int>): Int {
 }
 
 fun emptyTillStoppingIndex(coefficients1: List<Double>, index: Int): Boolean {
-    //println(coefficients1.first { it != 0} <= index)
     return coefficients1.indexOfFirst { it != 0.0 } <= index
 }
 
@@ -98,5 +96,4 @@ fun subtract(coefficients1: MutableList<Double>, coefficients2: MutableList<Doub
         coefficients1[ind] -= co
         ind += 1
     }
-    //coefficients1.removeAt(0)
 }
