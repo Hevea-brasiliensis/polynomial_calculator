@@ -23,17 +23,42 @@ fun findExponents(eq: String): List<Int> {
     }
 }
 
-//TODO: regex power XD ale kurwa to jest najciezsza czesc zadania, jak cos to nie dziala bo trzeba tego stringa teraz na tablice intow fajnie zrobic
 fun findCoefficients(eq: String): List<Int> {
     val reg = Regex("(?<=[+-])|(?=[+-])")
-    val words: List<String> = eq.split(reg).map { it.trim() }
-    println(words)
-    return words.map {
-        when {
-            'x' == it.first() -> 1
-            else -> it.first().toString().toInt()
+    val words: MutableList<String> = eq.split(reg).map { it.trim() }.toMutableList()
+    var index = 0
+    for (word in words) {
+        if (word == "-") {
+            words[index + 1] = "-" + words[index+1]
+        }
+        index += 1
+    }
+    words.removeAll(arrayListOf("+","-"))
+    var list: MutableList<Int> = mutableListOf()
+    for (word in words){
+        if ("x" in word) {
+            val indexOfX = word.indexOf('x')
+            if (indexOfX != 0 && word[0] != '-') {
+                val slice = word.slice(0 until indexOfX).toInt()
+                list.add(slice)
+            } else if (indexOfX != 0) {
+                list.add(-1)
+            } else {
+                list.add(1)
+            }
+        } else {
+            list.add(word.toInt())
         }
     }
+    return list
+    /* return words.map {
+        when {
+            'x' == it.first() -> 1
+            '-' == it.first() -> it.slice(0..1).toInt()
+            "-x" == it.slice(0..1) -> -1
+            else -> it.first().toInt()
+        }
+    } */
 }
 
 //TODO: no to bedzie rozbudowane wiec zaczalem dzielic to na jakies mini funkcje nwm czy jest czytelne
